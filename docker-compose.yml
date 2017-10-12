@@ -1,0 +1,46 @@
+version: '2.0'
+services:
+ db:
+  image: mysql
+  environment:
+   - MYSQL_ALLOW_EMPTY_PASSWORD=true
+   - MYSQL_ROOT_PASSWOR=Ss12345
+   - MYSQL_USER=joomla
+   - MYSQL_PASSWORD=Cc12345
+   - MYSQL_DATABASE=joomla
+  restart: always
+  ports:
+   - 3306:3306
+
+ joomla:
+  image: joomla
+  environment:
+   - JOOMLA_DB_HOST=mysql:3306
+   - JOOMLA_DB_USER=joomla
+   - JOOMLA_DB_PASSWORD=Cc12345
+   - JOOMLA_DB_NAME=joomla
+  restart: always
+  links:
+   - db:mysql
+  ports:
+   - "8081:80"
+
+ qgPhpMyAdmin:
+  image: nazarpc/phpmyadmin
+  ports:
+   - "8090:80"
+  links:
+   - db:mysql
+
+ wordpress:
+  image: wordpress
+  environment:
+   - WORDPRESS_DB_HOST=mysql:3306
+   - WORDPRESS_DB_USER=joomla
+   - WORDPRESS_DB_PASSWORD=Cc12345
+   - WORDPRESS_DB_NAME=joomla
+  restart: always
+  links:
+   - db:mysql
+  ports:
+   - 8082:80
